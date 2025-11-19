@@ -3,7 +3,7 @@
 #include <string>
 
 
-AVLTree::AVLNode::AVLNode(KeyType key, ValueType value, AVLNode* parent) {
+AVLTree::AVLNode::AVLNode(std::string key, size_t value, AVLNode* parent) {
     this->key = key;
     this->value = value;
     this->height = 0;
@@ -70,6 +70,54 @@ size_t AVLTree::size() const {
     return this->treeSize;
 }
 
+vector<std::string> AVLTree::findRange(const std::string &lowKey, const std::string &highKey) const {
+    AVLNode* node = this->root;
+    vector<std::string> returnVector;
+    rangeHelper(lowKey, highKey, returnVector, this->root);
+
+    return returnVector;
+}
+
+bool AVLTree::rangeHelper(const std::string &lowKey, const std::string &highKey, vector<std::string>& returnVector, AVLTree::AVLNode* curNode) const {
+    //bottom of tree
+    if (curNode == nullptr) {
+      return false;
+    }
+
+    if (curNode == this->root) {
+        if ((curNode->key >= lowKey) or (curNode->key <= highKey)){
+            returnVector.push_back(std::to_string(curNode->value));
+        }
+        else {
+            return false;
+        }
+    }
+
+    if (curNode->key >= lowKey) {
+        if (rangeHelper(lowKey, highKey, returnVector, curNode->left)) {
+            returnVector.push_back(std::to_string(curNode->left->value));
+        }
+    }
+
+    if (curNode->key <= highKey) {
+        if (rangeHelper(lowKey, highKey, returnVector, curNode->right)) {
+            returnVector.push_back(std::to_string(curNode->right->value));
+        }
+    }
+
+
+    //leftkey less than lowkey
+    if (curNode->key < lowKey) {
+        return false;
+    }
+    //rightkey greater than right key
+    if (curNode->key > highKey) {
+        return false;
+    }
+
+    return true;
+}
+
 bool AVLTree::removeNode(AVLNode*& current){
     if (!current) {
         return false;
@@ -114,7 +162,7 @@ bool AVLTree::removeNode(AVLNode*& current){
     return true;
 }
 
-bool AVLTree::remove(AVLNode *&current, KeyType key) {
+bool AVLTree::remove(AVLNode *&current, std::string key) {
     if (removeNode(current)) {
         treeSize--;
         return true;

@@ -68,12 +68,12 @@ int main() {
     cout << endl;
 //
 //    // findRange
-//    vector<int> rangeTest = tree.findRange("D", "W");
-//    // 70 68 82 75 77 86
-//    for (auto val: rangeTest) {
-//        cout << val << " ";
-//    }
-//    cout << endl << endl;
+    vector<std::string> rangeTest = tree.findRange("D", "W");
+    // 70 68 82 75 77 86
+    for (auto val: rangeTest) {
+        cout << val << " ";
+    }
+    cout << endl << endl;
 //
 //    // operator[]
 //    tree["A"] = 108;
