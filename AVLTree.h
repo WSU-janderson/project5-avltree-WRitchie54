@@ -15,7 +15,7 @@ public:
     using KeyType = std::string;
     using ValueType = size_t;
     bool insert(const std::string& key, size_t value);
-    // bool contains(const std::string& key) const;
+    bool contains(const std::string& key) const;
     // std::optional<size_t> get(const std::string& key) const;
     // size_t& operator[](const std::string& key);
     // vector<std::string> findRange( const std::string& lowKey, const std::string& highKey) const;
@@ -56,7 +56,7 @@ public:
     private:
     AVLNode* root;
     size_t treeSize;
-    AVLNode* getNodePlace(const std::string& key, AVLNode* curNode);
+    AVLNode* getNodePlace(const std::string& key, AVLNode* curNode) const;
     bool insertNode(const std::string& key, size_t value, AVLNode* curNode);
 
     friend bool printRightSide(AVLNode* node, int depth, ostream& os);

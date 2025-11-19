@@ -70,8 +70,6 @@ size_t AVLTree::size() const {
     return this->treeSize;
 }
 
-
-
 bool AVLTree::removeNode(AVLNode*& current){
     if (!current) {
         return false;
@@ -140,11 +138,20 @@ bool AVLTree::insert(const std::string& key, size_t value){
         treeSize++;
         return true;
     }
-
-
 }
 
-AVLTree::AVLNode* AVLTree::getNodePlace(const std::string& key, AVLTree::AVLNode* curNode) {
+bool AVLTree::contains(const std::string &key) const {
+    if (getNodePlace(key, this->root) != nullptr) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+
+
+AVLTree::AVLNode* AVLTree::getNodePlace(const std::string& key, AVLTree::AVLNode* curNode) const{
     if (curNode == nullptr) {
         return curNode;
     }
