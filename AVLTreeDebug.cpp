@@ -20,6 +20,17 @@ int main() {
      insertResult = tree.insert("X", 'X');// single rotate left
     cout << endl << endl;
     cout << tree << endl;
+
+    AVLTree tree2 = tree;
+    cout << endl << endl;
+    cout << tree2 << endl;
+    tree2.remove("F");
+    cout << tree <<endl;
+    cout << tree2 << endl;
+
+    delete tree;
+
+    cout << tree2;
     //
     insertResult = tree.insert("C", 'C');
     cout << endl << endl;

@@ -24,10 +24,10 @@ public:
     size_t size() const;
     size_t getHeight() const;
     bool remove(const std::string& key);
-    // AVLTree(const AVLTree& other);
+    AVLTree(const AVLTree& other);
     AVLTree();
-    // void operator=(const AVLTree& other);
-    // ~AVLTree();
+    void operator=(const AVLTree& other);
+    ~AVLTree();
 
 
 
@@ -35,6 +35,8 @@ protected:
     class AVLNode {
     public:
         AVLNode(std::string key, size_t value, AVLNode* parent);
+
+        AVLNode(AVLNode &other, AVLNode *parent);
 
         std::string key;
         size_t value;
@@ -60,8 +62,10 @@ public:
     size_t treeSize;
     AVLNode* getNodePlace(const std::string& key, AVLNode* curNode) const;
     bool insertNode(const std::string& key, size_t value, AVLNode* curNode);
-    bool rangeHelper(const std::string &lowKey, const std::string &highKey, vector<std::string>& returnVector, AVLTree::AVLNode* curNode) const;
+    bool rangeHelper(const std::string &lowKey, const std::string &highKey, vector<std::string>& returnVector, AVLNode* curNode) const;
     bool keysHelper(AVLNode* curNode, vector<std::string>& returnVector) const;
+    bool copyHelper(AVLNode* curNodeOld, AVLNode* curNode) const;
+    bool deleteHelper(AVLNode* curNode) const;
 
     friend bool printRightSide(AVLNode* node, int depth, ostream& os);
     friend bool printLeftSide(AVLNode* node, int depth, ostream& os);

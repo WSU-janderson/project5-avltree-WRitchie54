@@ -12,6 +12,15 @@ AVLTree::AVLNode::AVLNode(std::string key, size_t value, AVLNode* parent) {
     this->right = nullptr;
 }
 
+AVLTree::AVLNode::AVLNode(AVLNode &other, AVLNode *parent) {
+    this->key = other.key;
+    this->value = other.value;
+    this->height = other.height;
+    this->parent = parent;
+    this->left = nullptr;
+    this->right = nullptr;
+}
+
 size_t AVLTree::AVLNode::numChildren() const {
     if ((this->left == nullptr) and (this->right == nullptr)) {
         return 0;
@@ -513,6 +522,68 @@ void AVLTree::balanceNode(AVLNode *&node) {
     }
 }
 
+AVLTree::AVLTree(const AVLTree &other) {
+    if (other.root != nullptr) {
+        this->root = new AVLNode(*other.root, nullptr);
+        copyHelper(other.root, this->root);
+        treeSize = other.treeSize;
+    }
+}
+
+bool AVLTree::copyHelper(AVLNode* curNodeOld, AVLNode* curNode) const{
+    if (curNodeOld->getHeight() == 0) {
+        return false;
+    }
+
+    if (curNodeOld->left != nullptr) {
+        curNode->left = new AVLNode(*curNodeOld->left);
+        copyHelper(curNodeOld->left, curNode->left);
+    }
+
+    if (curNodeOld->right != nullptr) {
+        curNode->right = new AVLNode(*curNodeOld->right);
+        copyHelper(curNodeOld->right, curNode->right);
+    }
+
+    return true;
+}
+
+void AVLTree::operator=(const AVLTree &other) {
+    deleteHelper(this->root);
+    if (other.root != nullptr) {
+        this->root = new AVLNode(*other.root, nullptr);
+        copyHelper(other.root, this->root);
+        this->treeSize = other.treeSize;
+    }
+}
+
+AVLTree::~AVLTree() {
+    deleteHelper(this->root);
+}
+
+bool AVLTree::deleteHelper(AVLNode* curNode) const{
+    if (curNode == nullptr) {
+        return false;
+    }
+
+    if (curNode->left != nullptr) {
+        if (deleteHelper(curNode->left)) {
+            curNode->left = nullptr;
+        }
+    }
+
+    if (curNode->right != nullptr) {
+        if (deleteHelper(curNode->right)) {
+            curNode->right = nullptr;
+        }
+    }
+
+    delete curNode;
+    curNode = nullptr;
+
+    return true;
+}
+
 /*
  *  printRightSide: recursive function to print everything to the right of a node including node itself
  *
@@ -538,10 +609,6 @@ bool printRightSide(AVLTree::AVLNode *node, int depth, ostream &os) {
             //print lower nodes left node if available
             if (node->right->left != nullptr) {
                 printRightSide(node->right->left, depth+2, os);
-                // for (int i = 0; i < depth+2; i++) {
-                //     os << "\t";
-                // }
-                // os << "{" << node->right->left->key << ": " << node->right->left->value << "}" << std::endl;
             }
             //print
             for (int i = 0; i < depth; i++) {
@@ -573,12 +640,6 @@ std::ostream& operator<<(ostream& os, const AVLTree & avlTree) {
         node = node->left;
         depth++;
         printRightSide(node, depth, os);
-        // if (node->right != nullptr) and (node->left  {
-        //     for (int i = 0; i<depth; i++) {
-        //         os << "\t";
-        //     }
-        //     os << "{" << node->key << ": " << node->value << "}" << std::endl;
-        // }
     }
     return os;
 }
