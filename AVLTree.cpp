@@ -57,8 +57,19 @@ size_t AVLTree::AVLNode::getHeight() const {
 
 
 AVLTree::AVLTree() {
-    root = nullptr;
+    this->root = nullptr;
+    this->treeSize = 0;
 }
+
+
+size_t AVLTree::getHeight() const {
+    return this->root->getHeight();
+}
+
+size_t AVLTree::size() const {
+    return this->treeSize;
+}
+
 
 
 bool AVLTree::removeNode(AVLNode*& current){
@@ -106,6 +117,10 @@ bool AVLTree::removeNode(AVLNode*& current){
 }
 
 bool AVLTree::remove(AVLNode *&current, KeyType key) {
+    if (removeNode(current)) {
+        treeSize--;
+        return true;
+    }
     return false;
 }
 
@@ -121,8 +136,12 @@ bool AVLTree::insert(const std::string& key, size_t value){
     }
 
     //Find where the node should be inserted. Recusivley looks for lowest level
-    insertNode(key, value, this->root);
-    return true;
+    if (insertNode(key, value, this->root)) {
+        treeSize++;
+        return true;
+    }
+
+
 }
 
 AVLTree::AVLNode* AVLTree::getNodePlace(const std::string& key, AVLTree::AVLNode* curNode) {
@@ -184,7 +203,11 @@ bool AVLTree::insertNode(const std::string& key, size_t value, AVLTree::AVLNode*
         return false;
     }
 
-    curNode->height++;
+    if ((curNode->left != nullptr && (curNode->left->getHeight() == curNode->getHeight()))
+        or (curNode->right != nullptr && (curNode->right->getHeight() == curNode->getHeight()))){
+            curNode->height++;
+        }
+
     balanceNode(curNode);
     return true;
 }
@@ -217,10 +240,15 @@ void AVLTree::balanceNode(AVLNode *&node) {
             //right then left rotate
             else if (rightNodeBalance == 1) {
                 AVLNode* origRightLeft = rightNode->left;
+
+                //Set node to bottom right of current tree segment
                 node->right = nullptr;
                 node->height = 0;
+                rightNode->left = origRightLeft->right;
+                if (rightNode->left != nullptr) {
+                    rightNode->left->parent = rightNode;
+                }
                 origRightLeft->right = rightNode;
-                rightNode->left = nullptr;
                 origRightLeft->left = node;
                 if (node == root) {
                     root = origRightLeft;
@@ -241,10 +269,19 @@ void AVLTree::balanceNode(AVLNode *&node) {
             //left then right rotate
             if (leftNodeBalance == -1) {
                 AVLNode* origLeftRight = leftNode->right;
+
+                //Set the current node to bottom left of tree branch
                 node->left = nullptr;
                 node->height = 0;
+
+                //Set previous left node to be rotated into place of origLeftRight
+                leftNode->right = origLeftRight->left;
+                if (leftNode->right != nullptr) {
+                    leftNode->right->parent = leftNode;
+                }
+
+                //OrigLeftRight should be in place of node as head of tree segment
                 origLeftRight->left = leftNode;
-                leftNode->right = nullptr;
                 origLeftRight->right = node;
                 if (node == root) {
                     root = origLeftRight;
@@ -277,7 +314,17 @@ void AVLTree::balanceNode(AVLNode *&node) {
     }
 }
 
-//friend helper function a
+/*
+ *  printRightSide: recursive function to print everything to the right of a node including node itself
+ *
+ *  params
+ *      node - pointer to node that will be printed along with its children
+ *      depth - how deep into the tree we are for indentation purpouses
+ *      os - stream to print to
+ *
+ *   returns - true if it printed to the right
+ *
+ */
 bool printRightSide(AVLTree::AVLNode *node, int depth, ostream &os) {
     //bottom of tree
     if (node->right == nullptr) {
@@ -291,58 +338,35 @@ bool printRightSide(AVLTree::AVLNode *node, int depth, ostream &os) {
         if (printRightSide(node->right, depth+1, os)) {
             //print lower nodes left node if available
             if (node->right->left != nullptr) {
-                for (int i = 0; i < depth+2; i++) {
-                    os << "\t";
-                }
-                os << "{" << node->right->left->key << ": " << node->right->left->value << "}" << std::endl;
+                printRightSide(node->right->left, depth+2, os);
+                // for (int i = 0; i < depth+2; i++) {
+                //     os << "\t";
+                // }
+                // os << "{" << node->right->left->key << ": " << node->right->left->value << "}" << std::endl;
             }
-            // //print
-            // for (int i = 0; i < depth; i++) {
-            //     os << "\t";
-            // }
-            // os << "{" << node->key << ": " << node->value << "}" << std::endl;
+            //print
+            for (int i = 0; i < depth; i++) {
+                os << "\t";
+            }
+            os << "{" << node->key << ": " << node->value << "}" << std::endl;
             return true;
         }
     }
     return false;
 }
 
-//friend helper function b
-bool printLeftSide(AVLTree::AVLNode *node, int depth, ostream &os) {
-
-
-    //bottom of tree
-    if (node->left == nullptr) {
-        for (int i = 0; i < depth; i++) {
-            os << "\t";
-        }
-        os << "{" << node->key << ": " << node->value << "}" << std::endl;
-        return true;
-    }
-    else {
-        if (printRightSide(node->left, depth+1, os)) {
-            //print lower nodes right node if available
-            if (node->left->right != nullptr) {
-                for (int i = 0; i < depth+2; i++) {
-                    os << "\t";
-                }
-                os << "{" << node->left->right->key << ": " << node->left->right->value << "}" << std::endl;
-            }
-            // //print
-            // for (int i = 0; i < depth; i++) {
-            //     os << "\t";
-            // }
-            // os << "{" << node->key << ": " << node->value << "}" << std::endl;
-            return true;
-        }
-    }
-    return false;
-}
-
-//print function friend
+/*
+ *  friend << operator - prints tree to ostream. It indents the lowest height members of the tree the farthest out and then prints highest height farthest to the left
+ *      each member of the tree is seperated by a new line
+ *
+ *      Params: os - stream to output to
+ *              avlTree- tree to print
+ *
+ *      returns - reference to ostream that can be used to output
+ */
 std::ostream& operator<<(ostream& os, const AVLTree & avlTree) {
     printRightSide(avlTree.root, 0, os);
-    os << "{" << avlTree.root->key << ": " << avlTree.root->value << "}" << std::endl;
+    // os << "{" << avlTree.root->key << ": " << avlTree.root->value << "}" << std::endl;
     AVLTree::AVLNode* node = avlTree.root;
     int depth = 0;
 
@@ -350,12 +374,12 @@ std::ostream& operator<<(ostream& os, const AVLTree & avlTree) {
         node = node->left;
         depth++;
         printRightSide(node, depth, os);
-        if (node->right != nullptr) {
-            for (int i = 0; i<depth; i++) {
-                os << "\t";
-            }
-            os << "{" << node->key << ": " << node->value << "}" << std::endl;
-        }
+        // if (node->right != nullptr) and (node->left  {
+        //     for (int i = 0; i<depth; i++) {
+        //         os << "\t";
+        //     }
+        //     os << "{" << node->key << ": " << node->value << "}" << std::endl;
+        // }
     }
     return os;
 }

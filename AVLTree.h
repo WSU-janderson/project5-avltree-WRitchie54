@@ -20,8 +20,8 @@ public:
     // size_t& operator[](const std::string& key);
     // vector<std::string> findRange( const std::string& lowKey, const std::string& highKey) const;
     // std::vector<std::string> keys() const;
-    // size_t size() const;
-    // size_t getHeight() const;
+    size_t size() const;
+    size_t getHeight() const;
     // AVLTree(const AVLTree& other);
     AVLTree();
     // void operator=(const AVLTree& other);
@@ -55,6 +55,7 @@ public:
 
     private:
     AVLNode* root;
+    size_t treeSize;
     AVLNode* getNodePlace(const std::string& key, AVLNode* curNode);
     bool insertNode(const std::string& key, size_t value, AVLNode* curNode);
 
