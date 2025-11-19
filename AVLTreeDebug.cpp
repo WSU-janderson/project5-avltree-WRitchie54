@@ -79,6 +79,15 @@ int main() {
     tree["A"] = 108;
     cout << tree << endl;
     cout << endl;
+
+    //Keys
+    //Return all key values
+    vector<std::string> keysTest = tree.keys();
+    for (std::string str : keysTest) {
+        cout << str << " ";
+    }
+    cout << endl << endl;
+
 //
 //    // remove
 //    bool removeResult;

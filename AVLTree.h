@@ -20,7 +20,7 @@ public:
     std::optional<size_t> get(const std::string& key) const;
     size_t& operator[](const std::string& key);
     vector<std::string> findRange( const std::string& lowKey, const std::string& highKey) const;
-    // std::vector<std::string> keys() const;
+    std::vector<std::string> keys() const;
     size_t size() const;
     size_t getHeight() const;
     // AVLTree(const AVLTree& other);
@@ -60,6 +60,7 @@ public:
     AVLNode* getNodePlace(const std::string& key, AVLNode* curNode) const;
     bool insertNode(const std::string& key, size_t value, AVLNode* curNode);
     bool rangeHelper(const std::string &lowKey, const std::string &highKey, vector<std::string>& returnVector, AVLTree::AVLNode* curNode) const;
+    bool keysHelper(AVLNode* curNode, vector<std::string>& returnVector) const;
 
     friend bool printRightSide(AVLNode* node, int depth, ostream& os);
     friend bool printLeftSide(AVLNode* node, int depth, ostream& os);

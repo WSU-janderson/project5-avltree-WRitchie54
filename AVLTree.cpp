@@ -125,6 +125,35 @@ size_t& AVLTree::operator[](const std::string &key) {
     }
 }
 
+std::vector<std::string> AVLTree::keys() const {
+    std::vector<std::string> returnVector;
+    keysHelper(this->root, returnVector);
+    return returnVector;
+}
+
+bool AVLTree::keysHelper(AVLNode* curNode, vector<std::string>& returnVector) const {
+    //bottom of tree
+    if (curNode == nullptr) {
+        return false;
+    }
+
+    if (curNode == this->root) {
+        returnVector.push_back(std::to_string(curNode->value));
+    }
+
+    if (curNode->right != nullptr) {
+        if (keysHelper(curNode->right, returnVector)) {
+            returnVector.push_back(std::to_string(curNode->right->value));
+        }
+    }
+
+    if (curNode->right != nullptr) {
+        if (keysHelper(curNode->left, returnVector)) {
+            returnVector.push_back(std::to_string(curNode->left->value));
+        }
+    }
+    return true;
+}
 
 bool AVLTree::removeNode(AVLNode*& current){
     if (!current) {
