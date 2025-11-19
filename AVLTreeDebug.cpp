@@ -27,10 +27,10 @@ int main() {
     insertResult = tree.insert("A", 'A'); // single rotate right
     cout << endl << endl;
     cout << tree << endl;
-    //
-    // insertResult = tree.insert("D", 'D'); // double rotate right
-    // cout << endl << endl;
-    // cout << tree << endl;
+
+    insertResult = tree.insert("D", 'D'); // double rotate right
+    cout << endl << endl;
+    cout << tree << endl;
     //
     // insertResult = tree.insert("R", 'R'); // double rotate left
     // cout << endl << endl;

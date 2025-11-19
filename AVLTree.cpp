@@ -350,7 +350,12 @@ std::ostream& operator<<(ostream& os, const AVLTree & avlTree) {
         node = node->left;
         depth++;
         printRightSide(node, depth, os);
-        // os << "{" << node->key << ": " << node->value << "}" << std::endl;
+        if (node->right != nullptr) {
+            for (int i = 0; i<depth; i++) {
+                os << "\t";
+            }
+            os << "{" << node->key << ": " << node->value << "}" << std::endl;
+        }
     }
     return os;
 }
