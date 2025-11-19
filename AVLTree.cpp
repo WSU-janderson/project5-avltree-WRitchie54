@@ -369,10 +369,8 @@ void AVLTree::balanceNode(AVLNode *&node) {
             //Set node height to the greater of its two childrens heights + 1
             if (node->right->getHeight() > node->left->getHeight()) {
                 node->height = node->right->getHeight() + 1;
-            } else if (node->left->getHeight() > node->right->getHeight()) {
-                node->height = node->left->getHeight() + 1;
             } else {
-                node->height = 0;
+                node->height = node->left->getHeight() + 1;
             }
 
             // node->right = nullptr;
@@ -385,10 +383,8 @@ void AVLTree::balanceNode(AVLNode *&node) {
             //Set orig right lefts height to the greater of its two childrens heights + 1
             if (rightNode->right->getHeight() > rightNode->left->getHeight()) {
                 rightNode->height = rightNode->right->getHeight() + 1;
-            } else  if (rightNode->left->getHeight() > rightNode->right->getHeight()){
-                rightNode->height = rightNode->left->getHeight() + 1;
             } else {
-                rightNode->height = 0;
+                rightNode->height = rightNode->left->getHeight() + 1;
             }
 
             origRightLeft->right = rightNode;
@@ -407,18 +403,17 @@ void AVLTree::balanceNode(AVLNode *&node) {
             //Set orig right lefts height to the greater of its two childrens heights + 1
             if (origRightLeft->right->getHeight() > origRightLeft->left->getHeight()) {
                 origRightLeft->height = origRightLeft->right->getHeight() + 1;
-            } else if (origRightLeft->left->getHeight() > origRightLeft->right->getHeight()){
+            } else  if (origRightLeft->left->getHeight() > origRightLeft->right->getHeight()){
                 origRightLeft->height = origRightLeft->left->getHeight() + 1;
             }else {
                 node->height = 0;
             }
         }
             //left rotate
-            else if ((rightNodeBalance == -1) or (rightNodeBalance == 0)) {
+            else if (rightNodeBalance == -1) {
                 node->parent = node->right;
-
-
                 node->right = rightNode->left;
+
 
                 //Set node height to the greater of its two childrens heights + 1
                 if (node->right->getHeight() > node->left->getHeight()) {
@@ -443,16 +438,6 @@ void AVLTree::balanceNode(AVLNode *&node) {
                     node->parent->left = rightNode;
                     node->parent = rightNode;
                 }
-
-                //Set right node height to the greater of its two childrens heights + 1
-                if (rightNode->right->getHeight() > rightNode->left->getHeight()) {
-                    rightNode->height = rightNode->right->getHeight() + 1;
-                } else if (rightNode->left->getHeight() > rightNode->right->getHeight()) {
-                    rightNode->height = rightNode->left->getHeight() + 1;
-                }
-                else {
-                    rightNode->height = 0;
-                }
             }
         }
         else if (balance == 2) {
@@ -470,16 +455,7 @@ void AVLTree::balanceNode(AVLNode *&node) {
                 else {
                     node->left = nullptr;
                 }
-
-                //Set right node height to the greater of its two childrens heights + 1
-                if (node->right->getHeight() > node->left->getHeight()) {
-                    node->height = node->right->getHeight() + 1;
-                } else if (node->left->getHeight() > node->right->getHeight()) {
-                    node->height = node->left->getHeight() + 1;
-                }
-                else {
-                    node->height = 0;
-                }
+                node->height = node->right->getHeight() + 1;
 
                 //Set previous left node to be rotated into place of origLeftRight
                 leftNode->right = origLeftRight->left;
@@ -491,10 +467,8 @@ void AVLTree::balanceNode(AVLNode *&node) {
                 //Set left nodes height to be 1 greater than the greateast height between its children
                 if (leftNode->right->getHeight() > leftNode->left->getHeight()) {
                     leftNode->height = leftNode->right->getHeight() + 1;
-                } else if (leftNode->left->getHeight() > leftNode->right->getHeight()) {
-                    leftNode->height = leftNode->left->getHeight() + 1;
                 } else {
-                    leftNode->height = 0;
+                    leftNode->height = leftNode->left->getHeight() + 1;
                 }
 
                 //OrigLeftRight should be in place of node as head of tree segment
@@ -515,11 +489,8 @@ void AVLTree::balanceNode(AVLNode *&node) {
                 //Set orig left rights height to the greater of its two childrens heights + 1
                 if (origLeftRight->right->getHeight() > origLeftRight->left->getHeight()) {
                     origLeftRight->height = origLeftRight->right->getHeight() + 1;
-                } else if (origLeftRight->left->getHeight() > origLeftRight->right->getHeight()){
+                } else {
                     origLeftRight->height = origLeftRight->left->getHeight() + 1;
-                }
-                else {
-                    origLeftRight->height = 0;
                 }
             }
             //right rotate
