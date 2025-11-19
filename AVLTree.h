@@ -23,6 +23,7 @@ public:
     std::vector<std::string> keys() const;
     size_t size() const;
     size_t getHeight() const;
+    bool remove(const std::string& key);
     // AVLTree(const AVLTree& other);
     AVLTree();
     // void operator=(const AVLTree& other);
