@@ -5,6 +5,8 @@
 #ifndef AVLTREE_H
 #define AVLTREE_H
 #include <string>
+#include <vector>
+#include <optional>
 
 using namespace std;
 
@@ -12,10 +14,26 @@ class AVLTree {
 public:
     using KeyType = std::string;
     using ValueType = size_t;
+    bool insert(const std::string& key, size_t value);
+    // bool contains(const std::string& key) const;
+    // std::optional<size_t> get(const std::string& key) const;
+    // size_t& operator[](const std::string& key);
+    // vector<std::string> findRange( const std::string& lowKey, const std::string& highKey) const;
+    // std::vector<std::string> keys() const;
+    // size_t size() const;
+    // size_t getHeight() const;
+    // AVLTree(const AVLTree& other);
+    AVLTree();
+    // void operator=(const AVLTree& other);
+    // ~AVLTree();
+
+
 
 protected:
     class AVLNode {
     public:
+        AVLNode(KeyType key, ValueType value);
+
         KeyType key;
         ValueType value;
         size_t height;
@@ -29,8 +47,6 @@ protected:
         bool isLeaf() const;
         // number of hops to deepest leaf node
         size_t getHeight() const;
-
-
     };
 
 public:
@@ -40,7 +56,11 @@ public:
 
     private:
     AVLNode* root;
+    AVLNode* getNodePlace(const std::string& key, AVLNode* curNode);
+    bool insertNode(const std::string& key, size_t value, AVLNode* curNode);
+    // friend std::ostream& operator<<(ostream& os, const AVLTree & avlTree) {
 
+    // }
     /* Helper methods for remove */
     // this overloaded remove will do the recursion to remove the node
     bool remove(AVLNode*& current, KeyType key);
@@ -48,6 +68,7 @@ public:
     bool removeNode(AVLNode*& current);
     // You will implement this, but it is needed for removeNode()
     void balanceNode(AVLNode*& node);
+
 
 };
 
