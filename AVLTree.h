@@ -32,7 +32,7 @@ public:
 protected:
     class AVLNode {
     public:
-        AVLNode(KeyType key, ValueType value);
+        AVLNode(KeyType key, ValueType value, AVLNode* parent);
 
         KeyType key;
         ValueType value;
@@ -40,6 +40,7 @@ protected:
 
         AVLNode* left;
         AVLNode* right;
+        AVLNode* parent;
 
         // 0, 1 or 2
         size_t numChildren() const;

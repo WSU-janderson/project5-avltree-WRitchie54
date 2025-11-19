@@ -3,10 +3,11 @@
 #include <string>
 
 
-AVLTree::AVLNode::AVLNode(KeyType key, ValueType value) {
+AVLTree::AVLNode::AVLNode(KeyType key, ValueType value, AVLNode* parent) {
     this->key = key;
     this->value = value;
     this->height = 0;
+    this->parent = parent;
     this->left = nullptr;
     this->right = nullptr;
 }
@@ -141,7 +142,7 @@ AVLTree::AVLNode* AVLTree::getNodePlace(const std::string& key, AVLTree::AVLNode
 
 bool AVLTree::insertNode(const std::string& key, size_t value, AVLTree::AVLNode* curNode) {
     if (curNode == nullptr) {
-        curNode = new AVLNode(key, value);
+        curNode = new AVLNode(key, value, nullptr);
 
         //Node is root
         if (this->root == nullptr) {
@@ -153,7 +154,7 @@ bool AVLTree::insertNode(const std::string& key, size_t value, AVLTree::AVLNode*
 
     if (curNode->key < key) {
         if (curNode->right == nullptr) {
-            curNode->right = new AVLNode(key, value);
+            curNode->right = new AVLNode(key, value, curNode);
             if (curNode->getHeight() == 0) {
                 curNode->height = 1;
             }
@@ -167,7 +168,7 @@ bool AVLTree::insertNode(const std::string& key, size_t value, AVLTree::AVLNode*
     }
     else if (curNode->key > key) {
         if (curNode->left == nullptr) {
-            curNode->left = new AVLNode(key, value);
+            curNode->left = new AVLNode(key, value, curNode);
             if (curNode->getHeight() == 0) {
                 curNode->height = 1;
             }
@@ -204,6 +205,13 @@ void AVLTree::balanceNode(AVLNode *&node) {
                 rightNode->left = node;
                 if (node == root) {
                     root = rightNode;
+                    rightNode->parent = nullptr;
+                    node->parent = rightNode;
+                }
+                else {
+                    rightNode->parent = node->parent;
+                    node->parent->left = rightNode;
+                    node->parent = rightNode;
                 }
             }
             //right then left rotate
@@ -216,6 +224,13 @@ void AVLTree::balanceNode(AVLNode *&node) {
                 origRightLeft->left = node;
                 if (node == root) {
                     root = origRightLeft;
+                    origRightLeft->parent = nullptr;
+                    node->parent = origRightLeft;
+                }
+                else {
+                    origRightLeft->parent = node->parent;
+                    node->parent->right = origRightLeft;
+                    node->parent = origRightLeft;
                 }
             }
         }
@@ -233,6 +248,13 @@ void AVLTree::balanceNode(AVLNode *&node) {
                 origLeftRight->right = node;
                 if (node == root) {
                     root = origLeftRight;
+                    origLeftRight->parent = nullptr;
+                    node->parent = origLeftRight;
+                }
+                else {
+                    origLeftRight->parent = node->parent;
+                    node->parent->left = origLeftRight;
+                    node->parent = origLeftRight;
                 }
             }
             //right rotate
@@ -242,6 +264,13 @@ void AVLTree::balanceNode(AVLNode *&node) {
                 leftNode->right = node;
                 if (node == root) {
                     root = leftNode;
+                    leftNode->parent = nullptr;
+                    node->parent = leftNode;
+                }
+                else {
+                    leftNode->parent = node->parent;
+                    node->parent->left = leftNode;
+                    node->parent = leftNode;
                 }
             }
         }
@@ -280,6 +309,8 @@ bool printRightSide(AVLTree::AVLNode *node, int depth, ostream &os) {
 
 //friend helper function b
 bool printLeftSide(AVLTree::AVLNode *node, int depth, ostream &os) {
+
+
     //bottom of tree
     if (node->left == nullptr) {
         for (int i = 0; i < depth; i++) {
@@ -290,7 +321,7 @@ bool printLeftSide(AVLTree::AVLNode *node, int depth, ostream &os) {
     }
     else {
         if (printRightSide(node->left, depth+1, os)) {
-            //print lower nodes left node if available
+            //print lower nodes right node if available
             if (node->left->right != nullptr) {
                 for (int i = 0; i < depth+2; i++) {
                     os << "\t";
@@ -312,7 +343,15 @@ bool printLeftSide(AVLTree::AVLNode *node, int depth, ostream &os) {
 std::ostream& operator<<(ostream& os, const AVLTree & avlTree) {
     printRightSide(avlTree.root, 0, os);
     os << "{" << avlTree.root->key << ": " << avlTree.root->value << "}" << std::endl;
-    printLeftSide(avlTree.root, 0, os);
+    AVLTree::AVLNode* node = avlTree.root;
+    int depth = 0;
+
+    while (node->left != nullptr) {
+        node = node->left;
+        depth++;
+        printRightSide(node, depth, os);
+        // os << "{" << node->key << ": " << node->value << "}" << std::endl;
+    }
     return os;
 }
 

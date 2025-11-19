@@ -21,10 +21,12 @@ int main() {
     cout << endl << endl;
     cout << tree << endl;
     //
-    // insertResult = tree.insert("C", 'C');
-    // insertResult = tree.insert("A", 'A'); // single rotate right
-    // cout << endl << endl;
-    // cout << tree << endl;
+    insertResult = tree.insert("C", 'C');
+    cout << endl << endl;
+    cout << tree << endl;
+    insertResult = tree.insert("A", 'A'); // single rotate right
+    cout << endl << endl;
+    cout << tree << endl;
     //
     // insertResult = tree.insert("D", 'D'); // double rotate right
     // cout << endl << endl;
