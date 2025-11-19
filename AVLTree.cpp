@@ -149,6 +149,16 @@ bool AVLTree::contains(const std::string &key) const {
     }
 }
 
+std::optional<size_t> AVLTree::get(const std::string& key) const{
+    AVLNode *node = getNodePlace(key, this->root);
+    if (node != nullptr) {
+        return node->value;
+    }
+    else {
+        return nullopt;
+    }
+}
+
 
 
 AVLTree::AVLNode* AVLTree::getNodePlace(const std::string& key, AVLTree::AVLNode* curNode) const{
