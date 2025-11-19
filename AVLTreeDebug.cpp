@@ -21,16 +21,16 @@ int main() {
     cout << endl << endl;
     cout << tree << endl;
 
-    AVLTree tree2 = tree;
-    cout << endl << endl;
-    cout << tree2 << endl;
-    tree2.remove("F");
-    cout << tree <<endl;
-    cout << tree2 << endl;
+    // AVLTree tree2 = tree;
+    // cout << endl << endl;
+    // cout << tree2 << endl;
+    // tree2.remove("F");
+    // cout << tree <<endl;
+    // cout << tree2 << endl;
 
-    delete tree;
+    // delete &tree;
 
-    cout << tree2;
+    // cout << tree2;
     //
     insertResult = tree.insert("C", 'C');
     cout << endl << endl;

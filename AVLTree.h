@@ -78,7 +78,7 @@ public:
     // You will implement this, but it is needed for removeNode()
     void balanceNode(AVLNode*& node);
 
-
+    void RightRotate(AVLNode *pivotNode);
 };
 
 #endif //AVLTREE_H
