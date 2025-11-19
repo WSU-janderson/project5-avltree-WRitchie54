@@ -18,8 +18,8 @@ int main() {
     insertResult = tree.insert("F", 'F'); // false, no duplicates allowed
     insertResult = tree.insert("K", 'K');
      insertResult = tree.insert("X", 'X');// single rotate left
-    // cout << endl << endl;
-    // cout << tree << endl;
+    cout << endl << endl;
+    cout << tree << endl;
     //
     // insertResult = tree.insert("C", 'C');
     // insertResult = tree.insert("A", 'A'); // single rotate right

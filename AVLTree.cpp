@@ -24,6 +24,22 @@ size_t AVLTree::AVLNode::numChildren() const {
     }
 }
 
+int AVLTree::AVLNode::getBalance() const {
+    if ((this->left == nullptr) and (this->right != nullptr)) {
+        return -1 - this->right->getHeight();
+    }
+    else if ((this->left != nullptr) and (this->right == nullptr)) {
+        return this->left->getHeight() - (-1);
+    }
+    else if ((this->left != nullptr) and (this->right != nullptr)) {
+        return this->left->getHeight() - this->right->getHeight();
+    }
+    else {
+        return 0;
+    }
+}
+
+
 bool AVLTree::AVLNode::isLeaf() const {
     if (this->numChildren() == 0) {
         return true;
@@ -173,8 +189,133 @@ bool AVLTree::insertNode(const std::string& key, size_t value, AVLTree::AVLNode*
 }
 
 void AVLTree::balanceNode(AVLNode *&node) {
-    int balance = node->left->getHeight() - node->right->getHeight();
+    int balance = node->getBalance();
+
+    //need to balance node
     if ((balance > 1) or (balance < -1)) {
-        
+        if (balance == -2) {
+            AVLNode* rightNode = node->right;
+            int rightNodeBalance = rightNode->getBalance();
+
+            //left rotate
+            if (rightNodeBalance == -1) {
+                node->right = nullptr;
+                node->height = 0;
+                rightNode->left = node;
+                if (node == root) {
+                    root = rightNode;
+                }
+            }
+            //right then left rotate
+            else if (rightNodeBalance == 1) {
+                AVLNode* origRightLeft = rightNode->left;
+                node->right = nullptr;
+                node->height = 0;
+                origRightLeft->right = rightNode;
+                rightNode->left = nullptr;
+                origRightLeft->left = node;
+                if (node == root) {
+                    root = origRightLeft;
+                }
+            }
+        }
+        else if (balance == 2) {
+            AVLNode* leftNode = node->left;
+            int leftNodeBalance = leftNode->getBalance();
+
+            //left then right rotate
+            if (leftNodeBalance == -1) {
+                AVLNode* origLeftRight = leftNode->right;
+                node->left = nullptr;
+                node->height = 0;
+                origLeftRight->left = leftNode;
+                leftNode->right = nullptr;
+                origLeftRight->right = node;
+                if (node == root) {
+                    root = origLeftRight;
+                }
+            }
+            //right rotate
+            else if (leftNodeBalance == 1) {
+                node->left = nullptr;
+                node->height = 0;
+                leftNode->right = node;
+                if (node == root) {
+                    root = leftNode;
+                }
+            }
+        }
     }
 }
+
+//friend helper function a
+bool printRightSide(AVLTree::AVLNode *node, int depth, ostream &os) {
+    //bottom of tree
+    if (node->right == nullptr) {
+        for (int i = 0; i < depth; i++) {
+            os << "\t";
+        }
+        os << "{" << node->key << ": " << node->value << "}" << std::endl;
+        return true;
+    }
+    else {
+        if (printRightSide(node->right, depth+1, os)) {
+            //print lower nodes left node if available
+            if (node->right->left != nullptr) {
+                for (int i = 0; i < depth+2; i++) {
+                    os << "\t";
+                }
+                os << "{" << node->right->left->key << ": " << node->right->left->value << "}" << std::endl;
+            }
+            // //print
+            // for (int i = 0; i < depth; i++) {
+            //     os << "\t";
+            // }
+            // os << "{" << node->key << ": " << node->value << "}" << std::endl;
+            return true;
+        }
+    }
+    return false;
+}
+
+//friend helper function b
+bool printLeftSide(AVLTree::AVLNode *node, int depth, ostream &os) {
+    //bottom of tree
+    if (node->left == nullptr) {
+        for (int i = 0; i < depth; i++) {
+            os << "\t";
+        }
+        os << "{" << node->key << ": " << node->value << "}" << std::endl;
+        return true;
+    }
+    else {
+        if (printRightSide(node->left, depth+1, os)) {
+            //print lower nodes left node if available
+            if (node->left->right != nullptr) {
+                for (int i = 0; i < depth+2; i++) {
+                    os << "\t";
+                }
+                os << "{" << node->left->right->key << ": " << node->left->right->value << "}" << std::endl;
+            }
+            // //print
+            // for (int i = 0; i < depth; i++) {
+            //     os << "\t";
+            // }
+            // os << "{" << node->key << ": " << node->value << "}" << std::endl;
+            return true;
+        }
+    }
+    return false;
+}
+
+//print function friend
+std::ostream& operator<<(ostream& os, const AVLTree & avlTree) {
+    printRightSide(avlTree.root, 0, os);
+    os << "{" << avlTree.root->key << ": " << avlTree.root->value << "}" << std::endl;
+    printLeftSide(avlTree.root, 0, os);
+    return os;
+}
+
+
+
+
