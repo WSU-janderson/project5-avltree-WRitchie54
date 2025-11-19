@@ -118,6 +118,14 @@ bool AVLTree::rangeHelper(const std::string &lowKey, const std::string &highKey,
     return true;
 }
 
+size_t& AVLTree::operator[](const std::string &key) {
+    AVLNode* node = getNodePlace(key, this->root);
+    if (node != nullptr) {
+        return node->value;
+    }
+}
+
+
 bool AVLTree::removeNode(AVLNode*& current){
     if (!current) {
         return false;

@@ -75,10 +75,10 @@ int main() {
     }
     cout << endl << endl;
 //
-//    // operator[]
-//    tree["A"] = 108;
-//    cout << tree << endl;
-//    cout << endl;
+    // operator[]
+    tree["A"] = 108;
+    cout << tree << endl;
+    cout << endl;
 //
 //    // remove
 //    bool removeResult;
